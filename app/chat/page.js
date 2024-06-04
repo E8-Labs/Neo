@@ -14,8 +14,15 @@ const Page = () => {
   const [message, setMessage] = useState('');
   const [userChat, setUserChat] = useState([]);
   const [chatHistory, setChatHistory] = useState([]);
+  const [TestChatHistory, setTestChatHistory] = useState('');
   const [activeChat, setActiveChat] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  //test useeffect
+
+  useEffect(() => {
+    console.log("Test history is :", TestChatHistory);
+  }, [TestChatHistory])
 
   useEffect(() => {
     const storedHistory = localStorage.getItem('chatHistory');
@@ -117,7 +124,9 @@ const Page = () => {
         </div>
 
         <div style={{ height: "60%", border: '2px solid red', marginTop: 15, overflow: 'auto' }}>
-          <p>History</p>
+          <p>
+            History
+          </p>
           {chatHistory.map((chat, index) => (
             <Button
               key={index}
@@ -125,7 +134,7 @@ const Page = () => {
               style={{ borderRadius: 10, width: '100%', margin: '5px 0', textTransform: 'none' }}
               onClick={() => handleChatSelect(index)}
             >
-              Chat {index + 1}
+              {chat[0].content}
             </Button>
           ))}
         </div>
@@ -198,23 +207,25 @@ const Page = () => {
               </div>
             ) : (
               <div style={{ width: '100%' }}>
-                <div>
+                <div style={{ overflow: 'auto', height: '80vh' }}>
                   {userChat.map((chat, index) => (
                     <div key={index} style={{ gap: 20 }}>
                       {
                         chat.role === "user" ? (
                           <div>
-                            <div style={{ color: 'white', textAlign: 'end' }}>
-                              <strong>You:</strong>
-                              <p>{chat.content}</p>
+                            <div style={{ display: 'flex', justifyContent: 'end' }}>
+                              {/*<strong>You:</strong>*/}
+                              <div style={{ color: 'white', textAlign: 'end', width: 'fit-content', maxWidth: '60%', borderTopLeftRadius: 25, borderTopRightRadius: 25, MozBorderRadiusBottomleft: 25 }}>
+                                <p style={{ borderTopLeftRadius: 25, borderTopRightRadius: 25, borderEndStartRadius: 25, padding: 15, backgroundColor: '#be2596' }}>{chat.content}</p>
+                              </div>
                             </div>
                           </div>
                         ) :
                           (
                             <div>
                               <div style={{ color: 'white' }}>
-                                <strong>Chat GPT:</strong>
-                                <p>{chat.content}</p>
+                                {/*<strong>Chat GPT:</strong>*/}
+                                <p style={{ width: 'fit-content', maxWidth: '60%', padding: 15, borderTopLeftRadius: 25, borderTopRightRadius: 25, borderBottomRightRadius: 25, backgroundColor: '#ffffff40' }}>{chat.content}</p>
                               </div>
                             </div>
                           )
@@ -230,7 +241,10 @@ const Page = () => {
                 type='text'
                 placeholder='Enter your message here'
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={(e) => {
+                  setMessage(e.target.value)
+                  setTestChatHistory(e.target.value)
+                }}
                 onKeyDown={handleKeyDown}
                 className='rounded'
                 style={{ backgroundColor: 'transparent', color: 'white', paddingLeft: 10, outline: 'none', border: 'none', width: '90%' }}
